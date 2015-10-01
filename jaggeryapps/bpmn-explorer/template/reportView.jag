@@ -1,0 +1,137 @@
+<%/*<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->*/%>
+
+<div class="col-sm-12">
+   <div class="row">
+    <h3 id="h3">Click to generate reports</h3>
+    <br/>
+    <button id="generate" onclick="generateReport()">Generate Report</button>
+    <br/>
+    <% if(isProcessesDeployed == true) { %>
+    <link rel="stylesheet" href="css/tooltip.css">
+    <script src="js/pieChartGen.js"></script>
+    <script src="js/corechartEn.js"></script>
+    <link rel="stylesheet" href="css/chart.css">
+
+     <div class="col-lg-8 float-left" id="barChartDisplay" hidden>
+            <!-- Default panel contents -->
+            <div class="table-title"  style="width:100%">  Process Instance Count </div>
+                <form>
+                   <select id="processInstanceCount" name="processForDuration" class="form-control" onchange="selectProcessForInstanceCount()">
+
+                        <% if(pInstanceCount == "all") {%>
+                            <option value="all" selected>All processes</option>
+                          <% } else { %>
+                             <option value="all">All processes</option>
+                          <% } %>
+                          <% if(pInstanceCount == "min") {%>
+                            <option value="min" selected>10 Processes with a Minimum Number of Instances</option>
+                          <% } else { %>
+                             <option value="min">10 Processes with a Minimum Number of Instances</option>
+                          <% } %>
+
+                          <% if(pInstanceCount == "max") {%>
+                              <option value="max" selected>10 Processes with a Maximum Number of Instances</option>
+                           <% } else { %>
+                              <option value="max">10 Processes with a Maximum Number of Instances</option>
+                          <% } %>
+                    </select>
+                </form>
+            <div id="barChart">
+            <div style="height: 20%"></div>
+            </div>
+            <br>
+            <div class="table-title"  style="width:100%" id="taskDurationOfCompleted"> Average Time Duration Of Completed Processes </div>
+            <br>
+             <form>
+                <select id="selectOption" name="selectOption" class="form-control" onchange="selectProcessForAvgTimeDuration()">
+                    <% if(selectedProcess == "allProcesses") {%>
+                      <option value="allProcesses" selected>All Processes</option>
+                    <% } else { %>
+                      <option value="allProcesses">All Processes</option>
+                    <% } %>
+                    <% if(selectedProcess == "shortTime") {%>
+                      <option value="shortTime" selected>Short time duration:Ascending</option>
+                    <% } else { %>
+                      <option value="shortTime">Short time duration:Ascending</option>
+                    <% } %>
+
+                    <% if(selectedProcess == "longTime") {%>
+                      <option value="longTime" selected>Long time duration:Descending</option>
+                    <% } else { %>
+                      <option value="longTime">Long time duration:Descending</option>
+                    <% } %>
+                   </select>
+                 </form>
+            <div id="barChartAvgTime">
+            <div style="height: 20%"> </div>
+            </div>
+            <br>
+            <div class="table-title"  style="width:100%">  User Vs Number Of Tasks Completed </div>
+            <div id="colChartUserVsTasks">
+            <div style="height: 20%"> </div>
+            </div>
+            <br>
+            <div class="table-title"  style="width:100%">  User Vs Average Time Taken to Complete Tasks </div>
+            <div id="userVsAvgTaskDuration">
+            <div style="height: 20%"> </div>
+            </div>
+            <br>
+            <div class="table-title"  style="width:100%"> Task Instance Count Variation Over Time </div>
+            <div id="taskVariationOverTime"></div>
+            <br>
+            <div class="table-title"  style="width:100%"> Process Instance Count Variation Over Time </div>
+            <div id="processVariationOverTime"></div>
+            <br>
+            <div class="table-title"  style="width:100%"> User Performance Of Tasks Instances Over Time </div>
+                <form>
+                <select id="selectUser" name="selectUser" class="form-control" onchange="selectUserForPerformance()">
+                 <option value="" disabled selected>Select a User</option>
+                <% for(var j = 0; j < userArray.length; j++){ %>
+                <option value="<%=userArray[j]%>"><%=userArray[j]%></option>
+            <% } %>
+                  </select>
+                 </form>
+            <div id="taskOfUserVariation"> Select a user to view the performance </div>
+            <div style="height: 20%"> </div>
+
+      </div>
+
+      <div class="col-lg-4 float-left" id="pieChartDisplay" hidden>
+
+               <div class="table-title"  style="width:100%"> Task Durations Of Completed Process </div>
+               <br>
+
+              <form>
+                <select id="selectProcess" name="selectProcess" class="form-control" onchange="selectProcessForChart()">
+                <option value="" disabled selected>Select a Process</option>
+                <% for(var key in processDefinitionList) { %>
+                <option value="<%=processDefinitionList[key][0]%>"><%=processDefinitionList[key][0]%></option>
+                  <% } %>
+                  </select>
+                 </form>
+                  <div id="taskDurationChart" style="height: 300px" > Select a process to view the task duration</div>
+              </div>
+    <% }else{ %>
+      <br/>
+      <font color="red">
+         Currently there are no processes deployed to generate statistics.
+         <br/>
+         Please deploy processes from admin view to generate statistics.
+      </font>
+    <% }%>
+  </div>
+  </div>
